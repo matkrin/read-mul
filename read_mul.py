@@ -3,8 +3,8 @@ import os
 import numpy as np
 
 filename = ''
-filesize = os.path.getsize(filename)					#in bytes
-mul_block = 128											#in bytes
+filesize = os.path.getsize(filename)				#in bytes
+mul_block = 128							#in bytes
 
 with open(filename, 'rb') as f:
 	nr = struct.unpack('h', f.read(2))[0]
@@ -19,9 +19,9 @@ with open(filename, 'rb') as f:
 
 	while block_counter*mul_block < filesize:
 		img_id = struct.unpack('h', f.read(2))[0]
-		size = struct.unpack('h', f.read(2))[0]			#in mul_blocks
-		xres = struct.unpack('h', f.read(2))[0]			#in pixels
-		yres = struct.unpack('h', f.read(2))[0]			#in pixels
+		size = struct.unpack('h', f.read(2))[0]		#in mul_blocks
+		xres = struct.unpack('h', f.read(2))[0]		#in pixels
+		yres = struct.unpack('h', f.read(2))[0]		#in pixels
 		zres = struct.unpack('h', f.read(2))[0]
 
 		year = struct.unpack('h', f.read(2))[0]
@@ -31,12 +31,12 @@ with open(filename, 'rb') as f:
 		minute = struct.unpack('h', f.read(2))[0]
 		second = struct.unpack('h', f.read(2))[0]
 
-		xsize = struct.unpack('h', f.read(2))[0]		#in Angstrom
-		ysize  = struct.unpack('h', f.read(2))[0]		#in Angstrom
+		xsize = struct.unpack('h', f.read(2))[0]	#in Angstrom
+		ysize  = struct.unpack('h', f.read(2))[0]	#in Angstrom
 		xoffset = struct.unpack('h', f.read(2))[0]
 		yoffset = struct.unpack('h', f.read(2))[0]
-		zscale = struct.unpack('h', f.read(2))[0]		#in V
-		tilt = struct.unpack('h', f.read(2))[0]			#in deg
+		zscale = struct.unpack('h', f.read(2))[0]	#in V
+		tilt = struct.unpack('h', f.read(2))[0]		#in deg
 
 		speed = struct.unpack('h', f.read(2))[0]
 		bias = struct.unpack('h', f.read(2))[0]
@@ -53,7 +53,7 @@ with open(filename, 'rb') as f:
 		unitnr = struct.unpack('h', f.read(2))[0]
 		version = struct.unpack('h', f.read(2))[0]
 
-		spare_48 = struct.unpack('h', f.read(2))[0]		#useful in point scans?
+		spare_48 = struct.unpack('h', f.read(2))[0]	#useful in point scans?
 		spare_49 = struct.unpack('h', f.read(2))[0]
 		spare_50 = struct.unpack('h', f.read(2))[0]
 		spare_51 = struct.unpack('h', f.read(2))[0]
@@ -70,10 +70,10 @@ with open(filename, 'rb') as f:
 		spare_62 = struct.unpack('h', f.read(2))[0]
 		spare_63 = struct.unpack('h', f.read(2))[0]
 
-		speed *= 0.01									#in seconds
-		line_time = speed / yres						#in seconds
-		bias = -bias / 3.2768							#in mV
-		current *= currfac * 0.01						#in nA
+		speed *= 0.01					#in seconds
+		line_time = speed / yres			#in seconds
+		bias = -bias / 3.2768				#in mV
+		current *= currfac * 0.01			#in nA
 
 		img_data = np.frombuffer(f.read(xres*2), dtype=np.int16)
 		for i in range(0, yres - 1):
@@ -81,7 +81,7 @@ with open(filename, 'rb') as f:
 			img_data = np.vstack([img_data, line])
 
 		img_data = img_data.astype('float64')
-		img_data *= -0.1/1.36 * zscale/200 * 0.1		#in Angstrom
+		img_data *= -0.1/1.36 * zscale/200 * 0.1	#in Angstrom
 
 		if num_pointscans > 0:
 			for i in range(0, num_pointscans):
@@ -108,7 +108,7 @@ with open(filename, 'rb') as f:
 				ps_it_bw = struct.unpack('h', f.read(2))[0]
 				ps_lscan = struct.unpack('h', f.read(2))[0]
 
-				f.read(mul_block - 18*2)				#spare
+				f.read(mul_block - 18*2)	#spare
 				ps_data = np.frombuffer(f.read(ps_size*2), dtype=np.int16)
 
 		block_counter += size
