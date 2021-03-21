@@ -81,7 +81,7 @@ with open(filename, 'rb') as f:
 			img_data = np.vstack([img_data, line])
 
 		img_data = img_data.astype('float64')
-		img_data *= -0.1/1.36 * zscale/200 * 0.1	#in Angstrom
+		img_data *= -0.1/1.36 * zscale/200 			#in Angstrom
 
 		if num_pointscans > 0:
 			for i in range(0, num_pointscans):
